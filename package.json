@@ -1,0 +1,21 @@
+{
+  "name": "fbf-node-spider",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Zenek Palmer <zen.palmer@gmail.com>",
+  "contributors": [{}],
+  "bin": {},
+  "script": {},
+  "main": "",
+  "keywords": [],
+  "dependencies": {
+    "node-spider": "^0.8.1"
+  },
+  "devDependencies": {},
+  "preferGlobal": true,
+  "private": true,
+  "publishConfig": {},
+  "subdomain": "",
+  "analyze": true,
+  "license": "MIT"
+}
