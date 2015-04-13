@@ -1,15 +1,14 @@
-var siteUrl = 'http://fivebyfiveuk.com/';
+var siteUrl = 'http://pfaudler.com';
 
 var Spider = require('node-spider');
 
-var fs = require('fs');
-
 var spider = new Spider({
     concurrent: 5,
-    logs: true,
+    logs: false,
     headers: { 'user-agent': 'node-spider' },
     error: function(url, err){
-    // handle error 
+    	// handle error 
+		console.log(url, err);
     },
     done: function() {
 		console.log(internalUrls, externalUrls);
@@ -21,18 +20,29 @@ var externalUrls = {};
 
 var isInternalUrl = function(url){
 	var prefix = 'https://www.';
-	var index = url.indexOf(siteUrl.replace('http://', ''));
+	var index = url.toLowerCase().indexOf(siteUrl.replace('http://', ''));
 	return ( index != -1 && index <= prefix.length + 1 ) ? true : false;
 };
 
 var isImageUrl = function(url){
 	var imageExtensions = ['jpg', 'jpeg', 'gif', 'png'];
 	for (var i in imageExtensions) {
-		if ( url.indexOf('jpg') != -1 ){
+		var index = url.toLowerCase().indexOf(imageExtensions[i]); 
+		if ( index != -1 ){
 			return true;
 		}
 	}
 	return false;
+};
+
+var isIgnoredUrl = function(url){
+	var ignoredExtensions = ['doc', 'pdf'];
+	for (var i in ignoredExtensions) {
+		if ( url.toLowerCase().indexOf(ignoredExtensions[i]) != -1 ){
+			return false;
+		}
+	}
+	return true;
 };
 
 var handleRequest = function(doc){
@@ -42,7 +52,8 @@ var handleRequest = function(doc){
 	        var url = doc.resolve(href);
 			if ( isInternalUrl(url) ) {
 				if ( internalUrls[url] == undefined ){
-					if ( ! isImageUrl(url) ){
+					if ( 1 /* ! isImageUrl(url) && ! isIgnoredUrl(url) */ ){
+						console.log(url);
 						internalUrls[url] = 1;
 						setTimeout( function() {
 							spider.queue(url, handleRequest);
